@@ -1,65 +1,65 @@
-import { useState } from 'react';
-import { ContactForm } from './ContactForm/ContactForm';
-import { ContactList } from './ContactsList/ContactsList';
-import { Filter } from './Filter/Filter';
-import { Container, Subtitle, Title } from './App.styled';
-import { ButtonWithIcon } from './ButtonWithIcon/ButtonWithIcon';
-import { Modal } from './Modal/Modal';
-import { HiPlusCircle } from 'react-icons/hi';
-import { Message } from './Message/Message';
-import { useDispatch, useSelector } from 'react-redux';
-import { selectContacts, selectError, selectIsLoading } from 'redux/selectors';
-import { fetchContacts } from 'redux/operations';
+import { Layout } from './Layout/Layout';
+import { Route, Routes } from 'react-router-dom';
+import { Login } from 'pages/Login';
+import { Register } from 'pages/Register';
+import { Contacts } from 'pages/Contacts';
+import { Authentication } from 'pages/Authentication';
+import { Home } from './Home/Home';
+import { useDispatch } from 'react-redux';
 import { useEffect } from 'react';
-
-
-
-
+import { refreshUser } from 'redux/auth/authOperations';
+import { useAuth } from 'hooks/useAuth';
+import { RestrictedRoute } from './RestrictedRoute';
+import { PrivateRoute } from './PrivateRoute';
 
 export const App = () => {
-  const [showModal, setShowModal] = useState(false);
-  const arrContacts = useSelector(selectContacts)
-  const isLoading = useSelector(selectIsLoading);
-  const error = useSelector(selectError);
-  const dispatch = useDispatch()
-
+  const dispatch = useDispatch();
+  const { isRefreshing } = useAuth();
 
   useEffect(() => {
-    dispatch(fetchContacts())
-  }, [dispatch])
-  
-
-  const togleModal = () => {
-    setShowModal(prevState => !prevState);
-  };
-
-
+    dispatch(refreshUser());
+  }, [dispatch]);
 
   return (
-    <Container>
-      <Title>Phonebook</Title>
-      {arrContacts.length === 0 && !isLoading && <Message text="You don't have contacts yet" />}
-      <ButtonWithIcon onClick={togleModal} aria-label="add phone">
-        <HiPlusCircle size={20} />
-        ADD PHONE
-      </ButtonWithIcon>
-      {showModal && (
-        <Modal onClose={togleModal}>
-          <ContactForm onClose={togleModal}/>
-        </Modal>
-      )}
-      {isLoading && !error && <p>Loading...</p>}
-      {arrContacts.length !== 0 && (
-        <>
-          <Subtitle>Contacts</Subtitle>
-          <Filter/> 
-          <ContactList
+    !isRefreshing && (
+      <Routes>
+        <Route path="/" element={<Layout />}>
+          <Route
+            index
+            element={
+              <RestrictedRoute redirectTo="/contacts" component={<Home />} />
+            }
           />
-        </>
-      )}
-    </Container>
+          <Route path="authentication" element={<Authentication />}>
+            <Route
+              path="login"
+              element={
+                <RestrictedRoute redirectTo="/contacts" component={<Login />} />
+              }
+            />
+            <Route
+              path="register"
+              element={
+                <RestrictedRoute
+                  redirectTo="/contacts"
+                  component={<Register />}
+                />
+              }
+            />
+          </Route>
+          <Route
+            path="contacts"
+            element={
+              <PrivateRoute
+                redirectTo="/authentication/login"
+                component={<Contacts />}
+              />
+            }
+          />
+        </Route>
+      </Routes>
+    )
   );
 };
-
 
 

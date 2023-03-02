@@ -15,9 +15,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { addContact } from 'redux/operations';
 import { selectContacts } from 'redux/selectors';
 
-
-
-
 let schema = yup.object().shape({
   name: yup.string().required(),
   number: yup
@@ -53,12 +50,11 @@ const phoneMask = [
   /\d/,
 ];
 
-export const ContactForm = ({onClose}) => {
-
+export const ContactForm = ({ onClose }) => {
   const arrContacts = useSelector(selectContacts);
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const handleSubmit = (values, { resetForm }) => {
-      const { name } = values;
+    const { name } = values;
     if (
       arrContacts.some(
         contact => name.toLowerCase() === contact.name.toLowerCase()
@@ -67,9 +63,9 @@ export const ContactForm = ({onClose}) => {
       alert(`${name} is already in contacts`);
       return;
     }
-    dispatch(addContact(values))
+    dispatch(addContact(values));
     resetForm();
-    onClose()
+    onClose();
   };
 
   return (
@@ -109,7 +105,7 @@ export const ContactForm = ({onClose}) => {
             <ValidMessage name="number" component="div" />
           </Label>
           <Button
-            type="submit"
+            type={'submit'}
             disabled={
               (props.values.name !== '') & (props.values.number !== '')
                 ? false
@@ -123,7 +119,6 @@ export const ContactForm = ({onClose}) => {
     </Formik>
   );
 };
-
 
 ContactForm.propTypes = {
   onClose: PropTypes.func.isRequired,
