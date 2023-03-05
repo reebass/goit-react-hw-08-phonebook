@@ -20,6 +20,7 @@ export const register = createAsyncThunk(
             setAuthHeader(res.data.token);
             return res.data
         }catch (error) {
+            alert(`A user with this email address already exists. Sign in to your ${credentials.email} account or use a different email address.`)
             return thunkAPI.rejectWithValue(error.message)
         }
     }
@@ -34,6 +35,7 @@ export const logIn = createAsyncThunk(
         setAuthHeader(res.data.token);
         return res.data;
       } catch (error) {
+        alert(`The user with the specified data does not exist. You may have entered the wrong email or password.`)
         return thunkAPI.rejectWithValue(error.message);
       }
     }

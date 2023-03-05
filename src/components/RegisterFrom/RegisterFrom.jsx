@@ -22,40 +22,36 @@ const initualValues = {
 };
 
 export const RegisterFrom = () => {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const handleSubmit = (values, { resetForm }) => {
-    dispatch(register(values))
-    resetForm()
+    dispatch(register(values));
+    resetForm();
   };
 
-  return(
-  <Formik
-    initialValues={initualValues}
-    onSubmit={handleSubmit}
-    validationSchema={schema}
-  >
-    <AuthFormContainer>
-      <Label>
-        UserName
-        <Input name="name" type="text" required />
-        <ValidMessage name="name" component="div" />
-      </Label>
-      <Label>
-        Email
-        <Input
-          name="email"
-          type="email"
-          required
-        />
-        <ValidMessage name="email" component="div" />
-      </Label>
-      <Label>
-        Password
-        <Input name="password" type="password" required />
-        <ValidMessage name="password" component="div" />
-      </Label>
-      <AuthButton type={'submit'}>Register</AuthButton>
-    </AuthFormContainer>
-  </Formik>
-  )
+  return (
+    <Formik
+      initialValues={initualValues}
+      onSubmit={handleSubmit}
+      validationSchema={schema}
+    >
+      <AuthFormContainer>
+        <Label>
+          UserName
+          <Input name="name" type="text" required />
+          <ValidMessage name="name" component="div" />
+        </Label>
+        <Label>
+          Email
+          <Input name="email" type="email" required />
+          <ValidMessage name="email" component="div" />
+        </Label>
+        <Label>
+          Password
+          <Input name="password" type="password" required />
+          <ValidMessage name="password" component="div" />
+        </Label>
+        <AuthButton type={'submit'}>Register</AuthButton>
+      </AuthFormContainer>
+    </Formik>
+  );
 };
